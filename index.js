@@ -17,6 +17,11 @@ async function running(){
         const serviceCollection = client.db('foodService').collection('services');
         const reviewCollection = client.db('foodService').collection('reviews');
 
+        app.post('/jwt',(req,res)=>{
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET,{expiresIn: '10h'})
+        })
+
         app.get('/services',async(req,res)=>{
             const query = {};
             const cursor = serviceCollection.find(query)
