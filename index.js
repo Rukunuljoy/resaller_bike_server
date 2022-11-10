@@ -8,9 +8,6 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json())
 
-// oAAcsEqgyvnSmBOI
-// foodService
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.hvxqvqc.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -50,6 +47,19 @@ async function running(){
             const result = await reviewCollection.insertOne(body)
             res.send(result)
 
+    })
+
+    app.patch('/reviews/:id', async(req, res)=>{
+        const id = req.params.id;
+        const status = req.body.status;
+        const query = {_id:ObjectId(id)}
+        const updatedDoc = {
+            $set:{
+                status: status
+            }
+        }
+        const result = await reviewCollection.updateOne(query, updatedDoc)
+        res.send(result)
     })
 
     app.delete('/reviews/:id', async(req,res)=>{
